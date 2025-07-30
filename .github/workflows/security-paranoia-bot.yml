@@ -1,0 +1,55 @@
+# This workflow uses the Security Paranoia Bot template from siyuanorg/.github
+# The template is automatically available to all repositories in the siyuanorg organization
+
+name: Security Paranoia Bot Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to analyze (optional)'
+        required: false
+        type: string
+
+jobs:
+  # Use the organization template for Security Paranoia Bot
+  security-analysis:
+    uses: siyuanorg/.github/.github/workflows/security-paranoia-bot.yml@main
+    with:
+      # Optional: specify which PR to analyze
+      pr_number: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+      # Enable comprehensive analysis for test suite
+      enable_deep_scan: true
+      # Use AI-enhanced analysis
+      enable_ai_analysis: true
+    secrets:
+      # Pass organization secrets to the reusable workflow
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      # Optional secrets for enhanced features
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+  # Additional job to validate the test results
+  validate-results:
+    needs: security-analysis
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Validate Security Analysis
+        run: |
+          echo "🔍 Security Paranoia Bot Analysis Results:"
+          echo "Expected: 50+ vulnerabilities across multiple categories"
+          echo "Files analyzed: server.js, auth.js, database.js, payment.js, utils.js"
+          echo "Categories: OWASP Top 10, Business Logic, Authentication, Database, Payment"
+          echo "AI Analysis: Enhanced with Gemini for context-aware detection"
+          
+          # Check if the analysis job succeeded
+          if [ "${{ needs.security-analysis.result }}" = "success" ]; then
+            echo "✅ Security analysis completed successfully"
+          else
+            echo "❌ Security analysis failed or was skipped"
+            exit 1
+          fi
