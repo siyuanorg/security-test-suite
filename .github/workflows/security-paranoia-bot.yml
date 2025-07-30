@@ -1,0 +1,38 @@
+name: Security Paranoia Bot
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to analyze (optional)'
+        required: false
+        type: string
+      enable_deep_scan:
+        description: 'Enable deep security scan'
+        required: false
+        type: boolean
+        default: true
+      enable_ai_analysis:
+        description: 'Enable AI-powered vulnerability analysis'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  security-analysis:
+    uses: siyuanorg/.github/.github/workflows/security-paranoia-bot.yml@main
+    permissions:
+      checks: write
+      issues: write
+      pull-requests: write
+      security-events: write
+      contents: read
+    with:
+      pr_number: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+      enable_deep_scan: ${{ github.event.inputs.enable_deep_scan || true }}
+      enable_ai_analysis: ${{ github.event.inputs.enable_ai_analysis || true }}
+    secrets:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
