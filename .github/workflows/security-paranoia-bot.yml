@@ -26,7 +26,7 @@ jobs:
       enable_ai_analysis: true
     secrets:
       # Pass organization secrets to the reusable workflow
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Note: GITHUB_TOKEN is automatically provided by GitHub Actions
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       # Optional secrets for enhanced features
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
