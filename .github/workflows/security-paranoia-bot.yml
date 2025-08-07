@@ -33,6 +33,9 @@ jobs:
       pr_number: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
       enable_deep_scan: ${{ github.event.inputs.enable_deep_scan || true }}
       enable_ai_analysis: ${{ github.event.inputs.enable_ai_analysis || true }}
+      enable_ml_features: true
     secrets:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      PHASE3_API_URL: ${{ secrets.PHASE3_API_URL }}
+      PHASE3_API_KEY: ${{ secrets.PHASE3_API_KEY }}
